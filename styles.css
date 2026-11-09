@@ -1,0 +1,70 @@
+#cookie-dialog {
+    /* Linear from 270px @ 300px viewport (90%) to ~381px @ 1904px viewport (20%) */
+    /* (+46px for padding + border, since box-sizing is border-box) */
+    width: clamp(316px, 295.28px + 6.908vw, 427px);
+    max-width: 90vw;
+
+    /* Shrink to fit the content (height: auto would stretch a modal dialog to max-height) */
+    height: fit-content;
+    /*
+      Max height, inversely proportional like the width:
+        400px viewport  -> 380px (95%)
+        1000px viewport -> 500px (50%)
+      slope = (500 - 380) / (1000 - 400) = 0.2 -> 20dvh
+      intercept = 380 - 0.2 * 400 = 300px
+      Capped at 95dvh on very short screens and at 500px on tall ones.
+    */
+    max-height: min(95dvh, 300px + 20dvh, 500px);
+
+    /* Make width/max-height include padding + border, so 95dvh really means 95% */
+    box-sizing: border-box;
+    padding: 1.25rem;
+    gap: 1rem;
+    border-radius: 1rem;
+
+    &[open] {
+        /* Only flex while open, otherwise it overrides the closed dialog's display: none */
+        display: flex;
+        flex-direction: column;
+    }
+
+    h2, p {
+        margin: 0;
+    }
+
+    p {
+        /* If the dialog hits max-height, the text scrolls; title and buttons stay put */
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    #accept-btn {
+        background-color: green;
+    }
+
+    #deny-btn {
+        background-color: red;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    button {
+        color: white;
+        padding: 0.5rem 15%;
+        border-radius: 0.25rem;
+        border-width: 0;
+        box-shadow: grey 0.25rem 0.25rem 0.25rem;
+    }
+
+    button:hover {
+        transform: scale(1.1);
+    }
+}
+
+#cookie-dialog:not([open]) {
+    display: none;
+}
